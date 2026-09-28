@@ -417,53 +417,45 @@ elif page == "🤖 Attrition Prediction":
 
         for i, column in enumerate(columns):
 
-            current_column = (
-                col1 if i % 2 == 0 else col2
+    current_column = (
+        col1 if i % 2 == 0 else col2
+    )
+
+    with current_column:
+
+        # Check whether the column is numeric
+        if pd.api.types.is_numeric_dtype(feature_df[column]):
+
+            min_value = float(feature_df[column].min())
+            max_value = float(feature_df[column].max())
+            median_value = float(feature_df[column].median())
+
+            input_data[column] = st.number_input(
+                column,
+                min_value=min_value,
+                max_value=max_value,
+                value=median_value
             )
 
-            with current_column:
+        # Categorical feature
+        else:
 
-                # Categorical feature
-                if feature_df[column].dtype == "object":
+            options = sorted(
+                feature_df[column]
+                .dropna()
+                .astype(str)
+                .unique()
+                .tolist()
+            )
 
-                    options = sorted(
-                        feature_df[column]
-                        .dropna()
-                        .unique()
-                        .tolist()
-                    )
+            input_data[column] = st.selectbox(
+                column,
+                options
+            )
 
-                    input_data[column] = st.selectbox(
-                        column,
-                        options
-                    )
-
-                # Numerical feature
-                else:
-
-                    min_value = float(
-                        feature_df[column].min()
-                    )
-
-                    max_value = float(
-                        feature_df[column].max()
-                    )
-
-                    median_value = float(
-                        feature_df[column].median()
-                    )
-
-                    input_data[column] = st.number_input(
-                        column,
-                        min_value=min_value,
-                        max_value=max_value,
-                        value=median_value
-                    )
-
-        predict_button = st.form_submit_button(
-            "🔮 Predict Attrition"
-        )
-
+predict_button = st.form_submit_button(
+    "🔮 Predict Attrition"
+)
     # -----------------------------------------------------
     # PREDICTION RESULT
     # -----------------------------------------------------
