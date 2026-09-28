@@ -407,7 +407,7 @@ elif page == "🤖 Attrition Prediction":
 
     input_data = {}
 
-with st.form("prediction_form"):
+    with st.form("prediction_form"):
 
     st.subheader("Employee Information")
 
