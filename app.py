@@ -407,7 +407,7 @@ elif page == "🤖 Attrition Prediction":
 
     input_data = {}
 
-    with st.form("prediction_form"):
+with st.form("prediction_form"):
 
     st.subheader("Employee Information")
 
@@ -423,7 +423,7 @@ elif page == "🤖 Attrition Prediction":
 
         with current_column:
 
-            # Check whether the column is numeric
+            # Numerical feature
             if pd.api.types.is_numeric_dtype(feature_df[column]):
 
                 min_value = float(
