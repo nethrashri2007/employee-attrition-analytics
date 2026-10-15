@@ -459,7 +459,8 @@ elif page == "🤖 Attrition Prediction":
                     )
 
             predict_button = st.form_submit_button(
-                "Predict Attrition"
+                "Predict Attrition",
+                key="attrition_prediction_submit"
             )
 
 
