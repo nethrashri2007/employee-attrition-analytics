@@ -420,10 +420,28 @@ elif page == "🤖 Attrition Prediction":
                 col1 if i % 2 == 0 else col2
             )
 
-            
             with current_column:
+                # Keep your existing input-field code here
+
+
+                # Categorical feature
+                if feature_df[column].dtype == "object":
+
+                    options = sorted(
+                        feature_df[column]
+                        .dropna()
+                        .unique()
+                        .tolist()
+                    )
+
+                    input_data[column] = st.selectbox(
+                        column,
+                        options
+                    )
+
                 # Numerical feature
-                if pd.api.types.is_numeric_dtype(feature_df[column]):
+                else:
+
                     min_value = float(
                         feature_df[column].min()
                     )
@@ -443,26 +461,10 @@ elif page == "🤖 Attrition Prediction":
                         value=median_value
                     )
 
-                # Categorical feature
-                else:
-                    options = sorted(
-                        feature_df[column]
-                        .dropna()
-                        .astype(str)
-                        .unique()
-                        .tolist()
-                    )
-
-                    input_data[column] = st.selectbox(
-                        column,
-                        options
-                    )
-
-            predict_button = st.form_submit_button(
-                "Predict Attrition",
-                key="attrition_prediction_submit"
-            )
-
+        predict_button = st.form_submit_button(
+            " Predict Attrition",
+            key="attrition_prediction_submit"
+        )
 
     # -----------------------------------------------------
     # PREDICTION RESULT
