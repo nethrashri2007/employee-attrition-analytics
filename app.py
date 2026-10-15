@@ -405,65 +405,63 @@ elif page == "🤖 Attrition Prediction":
         ]
     )
 
+    
     input_data = {}
 
     with st.form("prediction_form"):
+        st.subheader("Employee Information")
 
-    st.subheader("Employee Information")
+        col1, col2 = st.columns(2)
 
-    col1, col2 = st.columns(2)
+        columns = feature_df.columns.tolist()
 
-    columns = feature_df.columns.tolist()
+        for i, column in enumerate(columns):
+            current_column = (
+                col1 if i % 2 == 0 else col2
+            )
 
-    for i, column in enumerate(columns):
+            
+            with current_column:
+                # Numerical feature
+                if pd.api.types.is_numeric_dtype(feature_df[column]):
+                    min_value = float(
+                        feature_df[column].min()
+                    )
 
-        current_column = (
-            col1 if i % 2 == 0 else col2
-        )
+                    max_value = float(
+                        feature_df[column].max()
+                    )
 
-        with current_column:
+                    median_value = float(
+                        feature_df[column].median()
+                    )
 
-            # Numerical feature
-            if pd.api.types.is_numeric_dtype(feature_df[column]):
+                    input_data[column] = st.number_input(
+                        column,
+                        min_value=min_value,
+                        max_value=max_value,
+                        value=median_value
+                    )
 
-                min_value = float(
-                    feature_df[column].min()
-                )
+                # Categorical feature
+                else:
+                    options = sorted(
+                        feature_df[column]
+                        .dropna()
+                        .astype(str)
+                        .unique()
+                        .tolist()
+                    )
 
-                max_value = float(
-                    feature_df[column].max()
-                )
+                    input_data[column] = st.selectbox(
+                        column,
+                        options
+                    )
 
-                median_value = float(
-                    feature_df[column].median()
-                )
+            predict_button = st.form_submit_button(
+                "Predict Attrition"
+            )
 
-                input_data[column] = st.number_input(
-                    column,
-                    min_value=min_value,
-                    max_value=max_value,
-                    value=median_value
-                )
-
-            # Categorical feature
-            else:
-
-                options = sorted(
-                    feature_df[column]
-                    .dropna()
-                    .astype(str)
-                    .unique()
-                    .tolist()
-                )
-
-                input_data[column] = st.selectbox(
-                    column,
-                    options
-                )
-
-    predict_button = st.form_submit_button(
-        "🔮 Predict Attrition"
-    )
 
     # -----------------------------------------------------
     # PREDICTION RESULT
