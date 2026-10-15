@@ -421,19 +421,24 @@ elif page == "🤖 Attrition Prediction":
             )
 
             with current_column:
-                if feature_df[column].dtype == "object":
+                # Keep your existing input-field code here
+
+
+                # Categorical feature
+                if (
+                    pd.api.types.is_object_dtype(feature_df[column])
+                    or isinstance(feature_df[column].dtype, pd.CategoricalDtype)
+                ):
                     options = sorted(
-                        feature_df[column]
-                        .dropna()
-                        .unique()
-                        .tolist()
+                        feature_df[column].dropna().unique().tolist(),
+                        key=str
                     )
 
                     input_data[column] = st.selectbox(
                         column,
-                        options
+                        options,
+                        key=f"categorical_{column}"
                     )
-
                 else:
                     numeric_values = pd.to_numeric(
                         feature_df[column],
@@ -482,10 +487,11 @@ elif page == "🤖 Attrition Prediction":
             [input_data]
         )
          
-        st.write("Input data types:", input_df.dtypes.astype(str))
+        st.write("Input data types:", input_df.dtypes.astype(str).to_dict())
         st.write("Input values:", input_df)
 
-        
+        st.write("Expected columns:", getattr(model, "feature_names_in_", None))
+
         st.write("Input columns:", input_df.columns.tolist())
 
         prediction = model.predict(

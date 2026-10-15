@@ -47,12 +47,12 @@ y = df["Attrition"]
 # ==========================================
 
 categorical_columns = X.select_dtypes(
-    include=["object"]
+    include=["object", "category", "string"]
 ).columns
 
-numerical_columns = X.select_dtypes(
-    exclude=["object"]
-).columns
+numerical_columns = X.columns.difference(
+    categorical_columns
+)
 
 
 print("Categorical columns:")
