@@ -481,6 +481,10 @@ elif page == "🤖 Attrition Prediction":
         input_df = pd.DataFrame(
             [input_data]
         )
+         
+        st.write("Input data types:", input_df.dtypes.astype(str))
+        st.write("Input values:", input_df)
+
 
         prediction = model.predict(
             input_df
