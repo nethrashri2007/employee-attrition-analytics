@@ -421,12 +421,7 @@ elif page == "🤖 Attrition Prediction":
             )
 
             with current_column:
-                # Keep your existing input-field code here
-
-
-                # Categorical feature
                 if feature_df[column].dtype == "object":
-
                     options = sorted(
                         feature_df[column]
                         .dropna()
@@ -439,27 +434,38 @@ elif page == "🤖 Attrition Prediction":
                         options
                     )
 
-                # Numerical feature
                 else:
+                    numeric_values = pd.to_numeric(
+                        feature_df[column],
+                        errors="coerce"
+                    ).dropna()
 
-                    min_value = float(
-                        feature_df[column].min()
-                    )
+                    if numeric_values.empty:
+                        input_data[column] = st.number_input(
+                            column,
+                            value=0.0,
+                            key=f"numeric_{column}"
+                        )
+                    else:
+                        min_value = float(numeric_values.min())
+                        max_value = float(numeric_values.max())
+                        median_value = float(numeric_values.median())
 
-                    max_value = float(
-                        feature_df[column].max()
-                    )
+                        if min_value == max_value:
+                            input_data[column] = st.number_input(
+                                column,
+                                value=median_value,
+                                key=f"numeric_{column}"
+                            )
+                        else:
+                            input_data[column] = st.number_input(
+                                column,
+                                min_value=min_value,
+                                max_value=max_value,
+                                value=median_value,
+                                key=f"numeric_{column}"
+                            )
 
-                    median_value = float(
-                        feature_df[column].median()
-                    )
-
-                    input_data[column] = st.number_input(
-                        column,
-                        min_value=min_value,
-                        max_value=max_value,
-                        value=median_value
-                    )
 
         predict_button = st.form_submit_button(
             " Predict Attrition",
