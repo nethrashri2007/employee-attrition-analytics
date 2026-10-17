@@ -493,8 +493,8 @@ elif page == "🤖 Attrition Prediction":
         .transformers_[0][2]
         )
 
-for column in categorical_columns:
-    input_df[column] = input_df[column].fillna("Unknown").astype(str)
+        for column in categorical_columns:
+                input_df[column] = input_df[column].fillna("Unknown").astype(str)
 
          
         st.write("Input data types:", input_df.dtypes.astype(str).to_dict())
