@@ -497,12 +497,7 @@ elif page == "🤖 Attrition Prediction":
                 input_df[column] = input_df[column].fillna("Unknown").astype(str)
 
          
-        st.write("Input data types:", input_df.dtypes.astype(str).to_dict())
-        st.write("Input values:", input_df)
-
-        st.write("Expected columns:", getattr(model, "feature_names_in_", None))
-
-        st.write("Input columns:", input_df.columns.tolist())
+    
 
         prediction = model.predict(
             input_df
