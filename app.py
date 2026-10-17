@@ -486,6 +486,16 @@ elif page == "🤖 Attrition Prediction":
         input_df = pd.DataFrame(
             [input_data]
         )
+        
+        # Match categorical input types to the trained encoder
+        categorical_columns = (
+        model.named_steps["preprocessor"]
+        .transformers_[0][2]
+        )
+
+for column in categorical_columns:
+    input_df[column] = input_df[column].fillna("Unknown").astype(str)
+
          
         st.write("Input data types:", input_df.dtypes.astype(str).to_dict())
         st.write("Input values:", input_df)

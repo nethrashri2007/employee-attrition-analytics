@@ -54,6 +54,14 @@ numerical_columns = X.columns.difference(
     categorical_columns
 )
 
+# Ensure categorical values use consistent string types
+X[categorical_columns] = (
+    X[categorical_columns]
+    .fillna("Unknown")
+    .astype(str)
+)
+
+
 
 print("Categorical columns:")
 print(categorical_columns.tolist())
