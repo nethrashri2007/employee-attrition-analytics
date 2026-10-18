@@ -406,9 +406,11 @@ elif page == "🤖 Attrition Prediction":
     )
 
     
-    input_data = {}
+    
 
     
+
+
     input_data = {}
 
     rating_options = {
@@ -509,7 +511,6 @@ elif page == "🤖 Attrition Prediction":
                                 format="%d",
                                 key=f"numeric_{column}",
                             )
-
 
 
         predict_button = st.form_submit_button(
