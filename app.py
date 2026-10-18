@@ -406,6 +406,7 @@ elif page == "🤖 Attrition Prediction":
     )
 
     
+    input_data = {}
 
     
     input_data = {}
