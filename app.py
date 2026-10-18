@@ -408,59 +408,96 @@ elif page == "🤖 Attrition Prediction":
     
     input_data = {}
 
+    
+    input_data = {}
+
+    rating_options = {
+        "Education": [1, 2, 3, 4, 5],
+        "EnvironmentSatisfaction": [1, 2, 3, 4],
+        "JobInvolvement": [1, 2, 3, 4],
+        "JobLevel": [1, 2, 3, 4, 5],
+        "JobSatisfaction": [1, 2, 3, 4],
+        "PerformanceRating": [1, 2, 3, 4],
+        "RelationshipSatisfaction": [1, 2, 3, 4],
+        "StockOptionLevel": [0, 1, 2, 3],
+        "WorkLifeBalance": [1, 2, 3, 4],
+    }
+
     with st.form("prediction_form"):
         st.subheader("Employee Information")
 
         col1, col2 = st.columns(2)
-
         columns = feature_df.columns.tolist()
 
         for i, column in enumerate(columns):
-            current_column = (
-                col1 if i % 2 == 0 else col2
-            )
+            current_column = col1 if i % 2 == 0 else col2
 
             with current_column:
-                # Keep your existing input-field code here
-
-
-                # Categorical feature
                 if (
                     pd.api.types.is_object_dtype(feature_df[column])
-                    or isinstance(feature_df[column].dtype, pd.CategoricalDtype)
+                    or isinstance(
+                        feature_df[column].dtype,
+                        pd.CategoricalDtype,
+                    )
                 ):
                     options = sorted(
                         feature_df[column].dropna().unique().tolist(),
-                        key=str
+                        key=str,
                     )
 
                     input_data[column] = st.selectbox(
                         column,
                         options,
-                        key=f"categorical_{column}"
+                        key=f"categorical_{column}",
                     )
+
+                elif column in rating_options:
+                    numeric_values = pd.to_numeric(
+                        feature_df[column],
+                        errors="coerce",
+                    ).dropna()
+
+                    options = sorted(
+                        numeric_values.astype(int).unique().tolist()
+                    )
+
+                    if not options:
+                        options = rating_options[column]
+
+                    input_data[column] = st.selectbox(
+                        column,
+                        options,
+                        key=f"rating_{column}",
+                    )
+
                 else:
                     numeric_values = pd.to_numeric(
                         feature_df[column],
-                        errors="coerce"
+                        errors="coerce",
                     ).dropna()
 
                     if numeric_values.empty:
                         input_data[column] = st.number_input(
                             column,
-                            value=0.0,
-                            key=f"numeric_{column}"
+                            value=0,
+                            step=1,
+                            format="%d",
+                            key=f"numeric_{column}",
                         )
                     else:
-                        min_value = float(numeric_values.min())
-                        max_value = float(numeric_values.max())
-                        median_value = float(numeric_values.median())
+                        min_value = int(numeric_values.min())
+                        max_value = int(numeric_values.max())
+                        median_value = int(
+                            round(numeric_values.median())
+                        )
 
                         if min_value == max_value:
                             input_data[column] = st.number_input(
                                 column,
-                                value=median_value,
-                                key=f"numeric_{column}"
+                                value=min_value,
+                                step=1,
+                                format="%d",
+                                key=f"numeric_{column}",
                             )
                         else:
                             input_data[column] = st.number_input(
@@ -468,8 +505,11 @@ elif page == "🤖 Attrition Prediction":
                                 min_value=min_value,
                                 max_value=max_value,
                                 value=median_value,
-                                key=f"numeric_{column}"
+                                step=1,
+                                format="%d",
+                                key=f"numeric_{column}",
                             )
+
 
 
         predict_button = st.form_submit_button(
